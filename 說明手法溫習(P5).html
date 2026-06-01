@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>說明手法大師｜口訣連線＋段落挑戰</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #f0f7ff 0%, #e2edf7 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .app-wrapper {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .hero h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #1e3c72, #f26922);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .hero p {
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            display: inline-block;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+        }
+        .match-area {
+            flex: 1.2;
+            min-width: 280px;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .match-header {
+            background: #1f4870;
+            color: white;
+            padding: 1rem 1.2rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .match-game {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .two-lists {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .col {
+            flex: 1;
+            background: #fefce8;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .col h3 {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-top: 0;
+            color: #1e3a5f;
+            border-bottom: 2px solid #f97316;
+            display: inline-block;
+            width: 100%;
+        }
+        .drag-item {
+            background: #fff7e6;
+            border: 1px solid #fcd9b6;
+            border-radius: 40px;
+            padding: 8px 12px;
+            margin: 8px 0;
+            cursor: pointer;
+            transition: 0.1s;
+            text-align: center;
+            font-weight: 500;
+        }
+        .drag-item.selected {
+            background: #f97316;
+            color: white;
+            border-color: #f97316;
+            box-shadow: 0 2px 8px rgba(249,115,22,0.3);
+        }
+        .drag-item.matched {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            cursor: default;
+            opacity: 0.8;
+        }
+        .reset-match {
+            background: #f1f5f9;
+            border: none;
+            padding: 8px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 12px;
+            color: #1f4870;
+        }
+        .match-feedback {
+            font-size: 0.85rem;
+            text-align: center;
+            background: #fef3c7;
+            border-radius: 24px;
+            padding: 6px;
+            margin-top: 10px;
+        }
+        .paired-summary {
+            font-size: 0.8rem;
+            margin-top: 6px;
+            text-align: center;
+        }
+        .quiz-area {
+            flex: 2.2;
+            min-width: 320px;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .quiz-header {
+            background: #f97316;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-weight: bold;
+        }
+        .q-counter {
+            background: #ffedd5;
+            color: #c2410c;
+            border-radius: 50px;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+        }
+        .passage-card {
+            background: #fffaf0;
+            margin: 1.2rem 1.5rem 0.5rem 1.5rem;
+            padding: 1rem 1.4rem;
+            border-radius: 1.2rem;
+            border-left: 8px solid #f97316;
+            font-size: 0.98rem;
+            line-height: 1.5;
+        }
+        .questions-panel {
+            padding: 0 1.5rem;
+        }
+        .sub-q {
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1rem;
+            margin: 1rem 0;
+            border: 1px solid #e2edf7;
+        }
+        .q-title {
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #155e75;
+        }
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .option-btn {
+            background: white;
+            border-radius: 60px;
+            padding: 8px 15px;
+            border: 1px solid #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .option-btn:hover { background: #f1f5f9; transform: translateX(3px); }
+        .opt-selected {
+            background: #ffedd5;
+            border: 2px solid #f97316;
+        }
+        .opt-letter {
+            font-weight: bold;
+            background: #cbd5e1;
+            width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+        }
+        .opt-selected .opt-letter { background: #f97316; color: white; }
+        .feedback-area {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+        }
+        .fb-correct { background: #d1fae5; border-left: 5px solid #10b981; color: #065f46; }
+        .fb-wrong { background: #fee2e2; border-left: 5px solid #ef4444; color: #991b1b; }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 12px 1.5rem 1.2rem 1.5rem;
+        }
+        button {
+            background: #334155;
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .next-btn { background: #f97316; }
+        .next-btn:hover { background: #ea580c; }
+        button:hover { filter: brightness(0.94); transform: scale(0.97); }
+        .score-footer {
+            background: #fff3bf;
+            text-align: center;
+            padding: 10px;
+            margin: 0 1.5rem 1.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 880px) {
+            .two-lists { flex-direction: column; }
+        }
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.75rem;
+            color: #556c82;
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <div class="hero">
+        <h1>🧠 說明手法 · 口訣連連看＋實戰測驗</h1>
+        <p>🎯 左邊先玩「手法↔口訣」連線配對｜右邊進行16關段落挑戰（手法辨識＋說明對象/目的）</p>
+    </div>
+    <div class="dashboard">
+        <div class="match-area">
+            <div class="match-header">🔗 口訣連線練習</div>
+            <div class="match-game">
+                <div class="two-lists">
+                    <div class="col"><h3>📌 說明手法</h3><div id="techniqueList"></div></div>
+                    <div class="col"><h3>✨ 小口訣</h3><div id="mnemonicList"></div></div>
+                </div>
+                <button id="resetMatchBtn" class="reset-match">🔄 清除配對 / 重新連線</button>
+                <div id="matchResult" class="match-feedback">✅ 點選手法 → 再點選口訣，即可配對！</div>
+                <div id="pairedSummary" class="paired-summary"></div>
+            </div>
+        </div>
+        <div class="quiz-area">
+            <div class="quiz-header">
+                <span>📖 段落實戰挑戰 · 16回合</span>
+                <span class="q-counter" id="questionCounter">第1 / 16題</span>
+            </div>
+            <div id="dynamicQuizArea"></div>
+            <div class="score-footer">🏆 累計得分：<span id="totalScoreSpan">0</span> / 32 分（手法判斷+目的/對象各1分）</div>
+        </div>
+    </div>
+    <footer>⭐ 左側連線成功後會記錄配對，隨時複習；右側測驗第二題直接找「說明對象/目的」，不需複雜概括。</footer>
+</div>
+<script>
+    const TECH_DATA = [
+        { name: "比喻說明", mnemonic: "像甚麼，更生動" },
+        { name: "比較說明", mnemonic: "比甚麼，更具體" },
+        { name: "分類說明", mnemonic: "分門類，有條理" },
+        { name: "數字說明", mnemonic: "數多少，更精確" },
+        { name: "舉例說明", mnemonic: "舉例子，更明白" },
+        { name: "定義說明", mnemonic: "下定義，更清楚" },
+        { name: "引用說明", mnemonic: "有根據，更可信" },
+        { name: "描述說明", mnemonic: "重描寫，顯特徵" }
+    ];
+    function shuffleArray(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+    let shuffledTechniques=[], shuffledMnemonics=[];
+    function refreshShuffledLists() { shuffledTechniques=shuffleArray(TECH_DATA.map(t=>t.name)); shuffledMnemonics=shuffleArray(TECH_DATA.map(t=>t.mnemonic)); }
+    const QUESTIONS = [
+        { passage: "「北極星就像夜空中永恆的指路燈塔，始終高掛北方，幫助旅人辨認方向。」這段話運用了甚麼說明手法？", correctTech: "比喻說明", techOptions: ["比喻說明","分類說明","數字說明","引用說明"], purposeOrTargetQ: "這段文字最主要說明的對象和目的是甚麼？", targetOptions: ["說明北極星的形狀大小","說明北極星像燈塔一樣能指引方向","說明燈塔的建造方式","說明夜空中的星星數量"], correctTargetIndex: 1 },
+        { passage: "「和傳統燃油車相比，電動車少了引擎震動與排廢氣，行駛更安靜，加速也更線性，但續航里程仍略遜一籌。」", correctTech: "比較說明", techOptions: ["比較說明","定義說明","舉例說明","描述說明"], purposeOrTargetQ: "這段文字主要是想說明甚麼？", targetOptions: ["說明電動車的充電時間","說明電動車與燃油車的特性差異","說明電動車的外觀設計","說明燃油車的歷史演變"], correctTargetIndex: 1 },
+        { passage: "「天氣預報中的降雨強度可分為：小雨（每小時累積雨量小於2.5mm）、大雨（每小時15-40mm）以及豪雨（每小時超過40mm）。」", correctTech: "分類說明", techOptions: ["分類說明","比喻說明","數字說明","引用說明"], purposeOrTargetQ: "這段文字說明的重點是甚麼？", targetOptions: ["說明降雨強度的三種分類與標準","說明豪雨造成的災害","說明世界各地的雨量紀錄","說明雨傘的選擇方式"], correctTargetIndex: 0 },
+        { passage: "「台灣最高峰玉山，海拔3952公尺，每年約有5萬人嘗試攀登，其中成功登頂約3萬4千人，比例約68%。」", correctTech: "數字說明", techOptions: ["數字說明","分類說明","描述說明","定義說明"], purposeOrTargetQ: "作者使用數字最主要說明的對象是？", targetOptions: ["說明玉山攀登的困難度","說明玉山高度與攀登相關數據","說明台灣山脈總數","說明登山裝備的價格"], correctTargetIndex: 1 },
+        { passage: "「許多動物會使用工具，例如：黑猩猩用樹枝釣螞蟻、海獺用石頭敲開貝殼、章魚還會搬運椰子殼來躲藏。」", correctTech: "舉例說明", techOptions: ["舉例說明","比較說明","定義說明","引用說明"], purposeOrTargetQ: "這段文字說明的目的是甚麼？", targetOptions: ["舉出具體動物案例來說明『動物使用工具』的現象","比較黑猩猩與海獺的智力","定義工具的科學意義","描述章魚的外觀"], correctTargetIndex: 0 },
+        { passage: "「所謂『程式碼重構』，是指在不改變程式外部行為的前提下，調整內部結構，讓程式更易於閱讀與維護。」", correctTech: "定義說明", techOptions: ["定義說明","舉例說明","數字說明","比喻說明"], purposeOrTargetQ: "這段文字主要說明的對象是？", targetOptions: ["說明程式語言的歷史","說明程式碼重構的定義與核心概念","說明重構的實際案例","說明維護程式的工具"], correctTargetIndex: 1 },
+        { passage: "「根據《全球風險報告》指出：『極端氣候已成為未來十年最嚴重的威脅』，世界氣象組織也呼籲各國加速減碳。」", correctTech: "引用說明", techOptions: ["引用說明","數字說明","分類說明","描述說明"], purposeOrTargetQ: "這段文字主要的目的是甚麼？", targetOptions: ["引用權威報告與組織說法，增加極端氣候威脅的可信度","具體描述極端氣候的畫面","分類不同氣候類型","統計碳排放數字"], correctTargetIndex: 0 },
+        { passage: "「清晨的森林，薄霧如紗，樹葉掛滿露珠，空氣中瀰漫著濕潤的青草香，偶爾傳來清脆的鳥鳴，寧靜而充滿生機。」", correctTech: "描述說明", techOptions: ["描述說明","定義說明","比較說明","舉例說明"], purposeOrTargetQ: "這段文字說明的焦點是甚麼？", targetOptions: ["透過感官摹寫描繪森林清晨的景色與氛圍","比較不同森林的差異","引用植物學知識","統計森林面積"], correctTargetIndex: 0 },
+        { passage: "「人類的記憶系統就像一座大型倉庫，短期記憶是臨時的卸貨區，長期記憶則是永久貨架，資訊必須經過整理才能存放。」", correctTech: "比喻說明", techOptions: ["比喻說明","分類說明","數字說明","定義說明"], purposeOrTargetQ: "這段文字想要說明甚麼？", targetOptions: ["倉庫的運作方式","記憶系統中短期記憶與長期記憶的關係（用倉庫比擬）","貨架的種類","記憶容量的數據"], correctTargetIndex: 1 },
+        { passage: "「有線滑鼠和無線滑鼠相比，有線滑鼠反應零延遲且價格便宜，但會被線材限制；無線滑鼠桌面簡潔但需要充電或換電池。」", correctTech: "比較說明", techOptions: ["比較說明","舉例說明","描述說明","引用說明"], purposeOrTargetQ: "這段文字主要說明的目的是？", targetOptions: ["比較兩種滑鼠的優缺點與差異","推薦某個滑鼠品牌","介紹滑鼠發明歷史","列出滑鼠銷售數字"], correctTargetIndex: 0 },
+        { passage: "「根據教育部的調查，國中生每天平均使用手機2.7小時，假日更長達4.2小時，其中社群軟體佔比最高達65%。」", correctTech: "數字說明", techOptions: ["數字說明","分類說明","比喻說明","描述說明"], purposeOrTargetQ: "作者使用這些數字，主要是想說明甚麼？", targetOptions: ["說明國中生手機使用時長及社群佔比的具體狀況","指出手機品牌的市佔率","說明社群軟體的功能","列出國中生在校成績"], correctTargetIndex: 0 },
+        { passage: "「許多國家推動無現金消費，例如：瑞典有超過98%的交易使用電子支付；中國大陸的微信支付和支付寶普及率極高；南韓也推行零錢不用找的政策。」", correctTech: "舉例說明", techOptions: ["舉例說明","定義說明","比較說明","數字說明"], purposeOrTargetQ: "這段文字說明的重點是甚麼？", targetOptions: ["列舉瑞典、中國、南韓等例子來說明各國推動無現金消費的做法","比較電子支付的優劣","定義『無現金』一詞","描述鈔票的演進"], correctTargetIndex: 0 },
+        { passage: "「珊瑚白化指的是珊瑚體內的共生藻類因為海水溫度異常升高而離開，導致珊瑚骨骼顏色變白，最後可能死亡的現象。」", correctTech: "定義說明", techOptions: ["定義說明","比喻說明","分類說明","引用說明"], purposeOrTargetQ: "這段文字主要在說明甚麼？", targetOptions: ["說明珊瑚白化的定義與成因","介紹珊瑚的顏色種類","列出海洋溫度數據","指出魚類與珊瑚的關係"], correctTargetIndex: 0 },
+        { passage: "「古生物學家可以將恐龍分為兩大類：鳥臀目（如三角龍）和蜥臀目（如暴龍、腕龍），前者具有鳥類般的骨盆結構。」", correctTech: "分類說明", techOptions: ["分類說明","比較說明","數字說明","描述說明"], purposeOrTargetQ: "這段文字主要說明目的是？", targetOptions: ["介紹恐龍的兩大類別與代表例子","指出恐龍的滅絕原因","說明恐龍的體重數字","說明鳥類的演化過程"], correctTargetIndex: 0 },
+        { passage: "「走進故宮博物院，翠玉白菜上精雕的螽斯栩栩如生，肉形石的肥瘦紋理幾可亂真，空氣中彷彿飄散著文墨氣息。」", correctTech: "描述說明", techOptions: ["描述說明","定義說明","引用說明","比較說明"], purposeOrTargetQ: "這段文字說明的目的是甚麼？", targetOptions: ["透過細膩描寫呈現故宮文物的精緻與藝術氛圍","比較翠玉白菜和肉形石的材質","引用故宮歷史文獻","統計故宮的參觀人數"], correctTargetIndex: 0 },
+        { passage: "「世界衛生組織（WHO）報告指出：『全球每10人就有9人呼吸著污染超標的空氣』，每年約700萬人死於空污相關疾病。」", correctTech: "引用說明", techOptions: ["引用說明","數字說明","分類說明","比喻說明"], purposeOrTargetQ: "這一段文字主要是想說明甚麼？", targetOptions: ["引用WHO權威數據，強調全球空污問題的嚴重性","介紹空氣清淨機的功能","描述霧霾的顏色","比較各國空污政策"], correctTargetIndex: 0 }
+    ];
+    let selectedTechnique = null, pairs = [];
+    function getOriginalMnemonic(techName) { const f=TECH_DATA.find(t=>t.name===techName); return f?f.mnemonic:null; }
+    function renderMatchGame() {
+        const tc=document.getElementById('techniqueList'), mc=document.getElementById('mnemonicList');
+        if(!tc||!mc) return;
+        tc.innerHTML=''; shuffledTechniques.forEach(techName=>{const m=pairs.find(p=>p.techName===techName); const d=document.createElement('div'); d.className=`drag-item ${selectedTechnique===techName?'selected':''}${m?' matched':''}`; d.innerText=techName; if(!m)d.onclick=e=>{e.stopPropagation(); selectedTechnique=techName; renderMatchGame();}; tc.appendChild(d);});
+        mc.innerHTML=''; shuffledMnemonics.forEach(mText=>{const m=pairs.find(p=>p.mnemonic===mText); const d=document.createElement('div'); d.className=`drag-item${m?' matched':''}`; d.innerText=mText; if(!m)d.onclick=()=>{if(selectedTechnique){if(pairs.some(p=>p.techName===selectedTechnique)){document.getElementById('matchResult').innerHTML='⚠️ 這個手法已經配對過了！'; selectedTechnique=null; renderMatchGame(); return;} if(pairs.some(p=>p.mnemonic===mText)){document.getElementById('matchResult').innerHTML='⚠️ 這個口訣已經被配對了！'; selectedTechnique=null; renderMatchGame(); return;} const correct=getOriginalMnemonic(selectedTechnique); if(correct===mText){pairs.push({techName:selectedTechnique,mnemonic:mText}); document.getElementById('matchResult').innerHTML=`✅ 正確配對！「${selectedTechnique} ↔ ${mText}」`;} else{document.getElementById('matchResult').innerHTML=`❌ 配對錯誤！「${selectedTechnique}」 的正確口訣是「${correct}」`;} selectedTechnique=null; renderMatchGame(); updatePairedSummary();} else{document.getElementById('matchResult').innerHTML='👆 請先點選左邊「說明手法」';}}; mc.appendChild(d);});
+    }
+    function updatePairedSummary(){const s=document.getElementById('pairedSummary'); if(s)s.innerHTML=pairs.length===TECH_DATA.length?'🎉 完美！所有手法與口訣都配對成功！ 🎉':`📌 已配對 ${pairs.length} / ${TECH_DATA.length} 組，繼續加油！`;}
+    function resetMatch(){pairs=[]; selectedTechnique=null; refreshShuffledLists(); renderMatchGame(); document.getElementById('matchResult').innerHTML='🔄 已清除所有配對，順序已重新打亂！'; updatePairedSummary();}
+    let currentQIndex=0, userTechAns=Array(QUESTIONS.length).fill(null), userTargetAns=Array(QUESTIONS.length).fill(null), techCorrectArr=Array(QUESTIONS.length).fill(false), targetCorrectArr=Array(QUESTIONS.length).fill(false);
+    function computeTotal(){let t=0; for(let i=0;i<QUESTIONS.length;i++){if(techCorrectArr[i])t++; if(targetCorrectArr[i])t++;} return t;}
+    function updateScoreUI(){document.getElementById('totalScoreSpan').innerText=computeTotal();}
+    function renderCurrentQuiz(){const q=QUESTIONS[currentQIndex]; const c=document.getElementById('dynamicQuizArea'); if(!c)return; const sti=userTechAns[currentQIndex], stai=userTargetAns[currentQIndex]; c.innerHTML=`<div class="passage-card">📄 ${q.passage}</div><div class="questions-panel"><div class="sub-q"><div class="q-title">🔍 <strong>【第一關】</strong> 這段文字使用了哪一種說明手法？</div><div class="option-group" id="techOptionsContainer"></div><div id="techFeedback" class="feedback-area"></div></div><div class="sub-q"><div class="q-title">🎯 <strong>【第二關】</strong> ${q.purposeOrTargetQ}</div><div class="option-group" id="targetOptionsContainer"></div><div id="targetFeedback" class="feedback-area"></div></div></div><div class="nav-buttons"><button id="prevBtn">◀ 上一題</button><button id="nextBtn" class="next-btn">下一題 ▶</button><button id="resetQuizBtn">🔄 全部重測</button></div>`;
+        const tcd=document.getElementById('techOptionsContainer');['A','B','C','D'].forEach((l,i)=>{const b=document.createElement('div'); b.className=`option-btn ${sti===i?'opt-selected':''}`; b.innerHTML=`<span class="opt-letter">${l}</span><span>${q.techOptions[i]}</span>`; b.onclick=()=>{if(userTechAns[currentQIndex]!==i){userTechAns[currentQIndex]=i; techCorrectArr[currentQIndex]=(q.techOptions[i]===q.correctTech); renderCurrentQuiz(); updateScoreUI();}}; tcd.appendChild(b);});
+        const tad=document.getElementById('targetOptionsContainer');['A','B','C','D'].forEach((l,i)=>{const b=document.createElement('div'); b.className=`option-btn ${stai===i?'opt-selected':''}`; b.innerHTML=`<span class="opt-letter">${l}</span><span>${q.targetOptions[i]}</span>`; b.onclick=()=>{if(userTargetAns[currentQIndex]!==i){userTargetAns[currentQIndex]=i; targetCorrectArr[currentQIndex]=(i===q.correctTargetIndex); renderCurrentQuiz(); updateScoreUI();}}; tad.appendChild(b);});
+        const tf=document.getElementById('techFeedback'); if(sti!==null){if(techCorrectArr[currentQIndex]) tf.innerHTML=`<div class="fb-correct">✅ 正確！此段落使用 ${q.correctTech}。</div>`; else tf.innerHTML=`<div class="fb-wrong">❌ 手法錯誤。正確答案是 ${q.correctTech}。</div>`;} else tf.innerHTML='<div class="feedback-area" style="background:#eef2ff;">✨ 請選擇一個說明手法。</div>';
+        const pf=document.getElementById('targetFeedback'); if(stai!==null){if(targetCorrectArr[currentQIndex]) pf.innerHTML=`<div class="fb-correct">🎯 正確！說明對象/目的：${q.targetOptions[q.correctTargetIndex]}。</div>`; else pf.innerHTML=`<div class="fb-wrong">⚠️ 答案錯誤。正確的是：${q.targetOptions[q.correctTargetIndex]}。</div>`;} else pf.innerHTML='<div class="feedback-area" style="background:#eef2ff;">📌 請選出這段文字說明的對象/目的。</div>';
+        document.getElementById('questionCounter').innerText=`第${currentQIndex+1} / ${QUESTIONS.length}題`;
+        const p=document.getElementById('prevBtn'), n=document.getElementById('nextBtn'), r=document.getElementById('resetQuizBtn');
+        if(p){const np=p.cloneNode(true); p.parentNode.replaceChild(np,p); np.onclick=()=>{if(currentQIndex>0){currentQIndex--; renderCurrentQuiz();}else alert('已在第一題');};}
+        if(n){const nn=n.cloneNode(true); n.parentNode.replaceChild(nn,n); nn.onclick=()=>{if(currentQIndex<QUESTIONS.length-1){currentQIndex++; renderCurrentQuiz();}else alert(`🎉 完成16題！總分 ${computeTotal()}/32`);};}
+        if(r){const nr=r.cloneNode(true); r.parentNode.replaceChild(nr,r); nr.onclick=()=>{userTechAns.fill(null); userTargetAns.fill(null); techCorrectArr.fill(false); targetCorrectArr.fill(false); currentQIndex=0; renderCurrentQuiz(); updateScoreUI();};}
+    }
+    function init(){refreshShuffledLists(); renderMatchGame(); updatePairedSummary(); document.getElementById('resetMatchBtn').onclick=resetMatch; renderCurrentQuiz(); updateScoreUI();}
+    init();
+</script>
+</body>
+</html>
