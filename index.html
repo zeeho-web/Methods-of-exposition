@@ -311,9 +311,10 @@
     let shuffledTechniques=[], shuffledMnemonics=[];
     function refreshShuffledLists() { shuffledTechniques=shuffleArray(TECH_DATA.map(t=>t.name)); shuffledMnemonics=shuffleArray(TECH_DATA.map(t=>t.mnemonic)); }
     
-    // ========== 16道完整段落題庫 ==========
+    // ========== 16道完整段落題庫（第一題已修改） ==========
     const QUESTIONS = [
-        { passage: "我們常常用「像」來幫助說明抽象的事物。舉例來說，老師在解釋心臟的功能時說：「心臟就像一個強力的幫浦，收縮時把血液打出去，舒張時把血液收回來，這樣身體各處才能獲得氧氣和養分。」這樣的說明讓同學們一下子就理解了心臟的運作原理，不再覺得困難。", correctTech: "比喻說明", techOptions: ["比喻說明","分類說明","數字說明","引用說明"], purposeOrTargetQ: "這段文字最主要說明的對象和目的是甚麼？", targetOptions: ["說明心臟的形狀大小","用心臟像幫浦的比喻來說明血液循環的原理","說明幫浦的製造方式","說明血液的顏色"], correctTargetIndex: 1 },
+        // 第1題：比喻說明（已修改，去除混淆）
+        { passage: "在科學課堂上，老師為了讓我們理解原子結構，把原子比喻成一個迷你太陽系。他說：『原子核就像太陽，體積很小但質量很大；環繞的電子就像行星，在固定的軌道上快速運轉。』透過這個生動的比喻，原本抽象難懂的原子模型，瞬間變得具體又容易想像。", correctTech: "比喻說明", techOptions: ["比喻說明","分類說明","數字說明","引用說明"], purposeOrTargetQ: "這段文字最主要說明的對象和目的是甚麼？", targetOptions: ["說明太陽系的星球數量","用太陽系比喻原子結構，讓抽象的科學概念變得生動易懂","說明原子的重量","說明老師的教學方法"], correctTargetIndex: 1 },
         
         { passage: "在選購筆記型電腦時，我們常會比較不同產品的差異。以輕薄型筆電和電競型筆電為例：輕薄型筆電重量只有1.2公斤，方便攜帶，適合學生和上班族；而電競型筆電雖然重達2.5公斤，但配備了高效能顯示卡和散熱系統，適合玩遊戲和剪輯影片。透過這樣的比較，消費者就能根據自己的需求做出選擇。", correctTech: "比較說明", techOptions: ["比較說明","定義說明","舉例說明","描述說明"], purposeOrTargetQ: "這段文字主要是想說明甚麼？", targetOptions: ["說明筆電的充電時間","透過比較輕薄筆電與電競筆電的特性，幫助消費者選擇","說明筆電的外觀設計","說明電腦的發明歷史"], correctTargetIndex: 1 },
         
